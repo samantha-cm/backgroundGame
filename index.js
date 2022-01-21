@@ -90,6 +90,16 @@ class Character {
 const cow = new Character(0, 250);
 const board = new Board();
 
+//FUNCIONES AUXILIARES
+
+function clearCanvas() {
+  ctx.clearRect(0, 0, $canvas.width, $canvas.height);
+}
+function pauseGame() {
+  clearInterval(gameInterval);
+  gameInterval = null;
+}
+
 function generateObstacles() {
   // Siempre que frames NO sea multiplo de 100 rompe la ejecucion, limitando la generacion de recursos (en este caso obstaculos)
   if (!(frames % 100 === 0)) return;
@@ -115,13 +125,22 @@ function checkColitions() {
 function gameOver() {
   console.log("you lost");
   clearInterval(gameInterval);
+  points = 0;
   isOver = true;
+}
+
+function score() {
+  points = Math.floor(frames / 5);
+  ctx.font = "18px helvetica";
+  ctx.fillStyle = "black";
+  ctx.fillText(`Score: ${points}`, 500, 50);
 }
 
 function reStart() {
   if (isOver) {
     cow.x = 0;
     cow.y = 150;
+    points = 0;
     obstacles = [];
     gameInterval = null;
     startGame();
@@ -142,21 +161,12 @@ function updateGame() {
   board.draw();
   cow.draw();
   printObstacles();
+  score();
 }
 
 function startGame() {
   if (gameInterval) return;
   gameInterval = setInterval(updateGame, 1000 / 60);
-}
-
-//FUNCIONES AUXILIARES
-
-function clearCanvas() {
-  ctx.clearRect(0, 0, $canvas.width, $canvas.height);
-}
-function pauseGame() {
-  clearInterval(gameInterval);
-  gameInterval = null;
 }
 
 //Eventos del jugador
